@@ -1,0 +1,448 @@
+/*
+  CLASES CSS
+*/
+
+
+/*
+  WIDTH 
+
+  wX -> width: X;
+  wminX -> min-width: X;
+  wmaxX -> max-width: X;
+
+  c -> Grande
+  cm -> Medio
+  cl -> Pequeno
+
+*/
+.wmax800{
+  max-width: 800px;
+}
+.wmax700{
+  max-width: 700px;
+}
+.wmax600{
+  max-width: 600px;
+}
+.wmax500{
+  max-width: 500px;
+}
+.wmax400{
+  max-width: 400px;
+}
+.wmax350{
+  max-width: 350px;
+}
+.wmax300{
+  max-width: 300px;
+}
+.wmax250{
+  max-width: 250px;
+}
+.wmax200{
+  max-width: 200px;
+}
+
+.c12{
+  width: 100%;
+}
+.c11{
+  width: 91.6%;
+}
+.c10{
+  width: 83.3%;
+}
+.c9{
+  width: 75%;
+}
+.c8{
+  width: 66.6%;
+}
+.c7{
+  width: 58.3%;
+}
+.c6{
+  width: 50%;
+}
+.c5{
+  width: 41.6%;
+}
+.c4{
+  width: 33.3%;
+}
+.c3{
+  width: 25%;
+}
+.c2{
+  width: 16.6%;
+}
+.c1{
+  width: 8.3%;
+}
+
+@media (max-width: 768px) {
+
+  .cmn{
+    display: none;
+  }
+  .cm12{
+    width: 100%;
+  }
+  .cm11{
+    width: 91.6%;
+  }
+  .cm10{
+    width: 83.3%;
+  }
+  .cm9{
+    width: 75%;
+  }
+  .cm8{
+    width: 66.6%;
+  }
+  .cm7{
+    width: 58.3%;
+  }
+  .cm6{
+    width: 50%;
+  }
+  .cm5{
+    width: 41.6%;
+  }
+  .cm4{
+    width: 33.3%;
+  }
+  .cm3{
+    width: 25%;
+  }
+  .cm2{
+    width: 16.6%;
+  }
+  .cm1{
+    width: 8.3%;
+  }
+}
+
+@media (max-width: 576px){
+  .wmax350l{
+    max-width: 350px;
+  }
+  .cln{
+    display: none;
+  }
+  .cl12{
+    width: 100%;
+  }
+  .cl11{
+    width: 91.6%;
+  }
+  .cl10{
+    width: 83.3%;
+  }
+  .cl9{
+    width: 75%;
+  }
+  .cl8{
+    width: 66.6%;
+  }
+  .cl7{
+    width: 58.3%;
+  }
+  .cl6{
+    width: 50%;
+  }
+  .cl5{
+    width: 41.6%;
+  }
+  .cl4{
+    width: 33.3%;
+  }
+  .cl3{
+    width: 25%;
+  }
+  .cl2{
+    width: 16.6%;
+  }
+  .cl1{
+    width: 8.3%;
+  }
+}
+
+
+/*
+  HEIGHT
+
+  hX -> height: X;
+  hminX -> min-height: X;
+  hmaxX -> max-height: X;
+*/
+.h1h{
+  height: 100vh;
+}
+.h1{
+  height: 100%;
+}
+.h090{
+  height: 90%;
+}
+.h080{
+  height: 80%;
+}
+.h075{
+  height: 75%;
+}
+.h070{
+  height: 70%;
+}
+.h065{
+  height: 65%;
+}
+.h060{
+  height: 60%;
+}
+.h050{
+  height: 50%;
+}
+.h040{
+  height: 40%;
+}
+.h020{
+  height: 20%;
+}
+.h015{
+  height: 15%;
+}
+.h010{
+  height: 10%;
+}
+.h005{
+  height: 5%;
+}
+.hm600{
+  max-height: 600px;
+}
+.h400{
+  height: 400px;
+}
+.h300{
+  height: 300px;
+}
+.h40{
+  height: 40px;
+}
+.ha{
+  height: auto;
+}
+
+
+/*
+  POSITION
+*/
+
+.pr{
+  position: relative;
+}
+.pa{
+  position: absolute;
+}
+.t0{
+  top: 0;
+}
+.t010{
+  top: 10%;
+}
+.b0{
+  bottom: 0;
+}
+.l0{
+  left: 0;
+}
+.r0{
+  right: 0;
+}
+
+/*
+  PADDING
+
+  p -> padding
+  pl -> padding-left
+
+*/
+.pl10{
+  padding-left: 10px;
+}
+
+/*
+  MARGIN
+*/
+.m0{
+  margin: 0;
+}
+
+/*
+  BORDER-RADIUS
+
+  br -> border-radius
+
+  l-> left
+  r-> right
+  t-> top
+  b-> bottom
+*/
+.br20{
+  border-radius: 20px;
+}
+.br10{
+  border-radius: 10px;
+}
+.brr10{
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.brl10{
+  border-bottom-left-radius: 10px;
+  border-top-left-radius: 10px;
+}
+.brt10{
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.brb10{
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+@media (max-width: 768px){
+  .br10m{
+    border-radius: 10px;
+  }
+}
+@media (max-width: 576px){
+  .br10l{
+    border-radius: 10px;
+  }
+}
+
+
+/*
+  FONT-SIZE
+*/
+.fs12{
+  font-size: 1.2rem;
+}
+.fs15{
+  font-size: 1.5rem;
+}
+.fs2{
+  font-size: 2rem;
+}
+
+/*
+  FLEX
+*/
+.df{
+  display: flex;
+}
+.dc{
+  display: contents;
+}
+.fww{
+  flex-wrap: wrap;
+}
+.ac{
+  align-items: center;
+}
+.ae{
+  align-items: end;
+}
+.jcc{
+  justify-content: center;
+}
+.jce{
+  justify-content: end;
+}
+.jcsb{
+  justify-content: space-between;
+}
+.jcsa{
+  justify-content: space-around;
+}
+.jcse{
+  justify-content: space-evenly;
+}
+.fdr{
+  flex-direction: row;
+}
+.fdc{
+  flex-direction: column;
+}
+
+/*
+  Z-INDEX
+*/
+.z2{
+  z-index: 2;
+}
+.z3{
+  z-index: 3;
+}
+.z100{
+  z-index: 100;
+}
+
+/*
+  COLOR
+*/
+.link{
+  color: #007BFF;
+}
+/*
+  BACKGROUND-COLOR
+*/
+
+.cinza{
+  background-color: #c9c9c9;
+}
+.verde-button{
+  background-color: #00D990;
+}
+
+
+.red{
+  background-color: red;
+}
+.blue{
+  background-color: blue;
+}
+.green{
+  background-color: green;
+}
+.yellow{
+  background-color: yellow;
+}
+.grey{
+  background-color: grey;
+}
+.black{
+  background-color: black;
+}
+
+
+
+/*
+  NO INFO
+*/
+.off {
+  object-fit: fill;
+}
+
+.bsbb{
+  box-sizing: border-box;
+}
+
+.bnone{
+  border: none;
+}
+.tac{
+  text-align: center;
+}
