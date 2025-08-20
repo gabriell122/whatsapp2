@@ -1,0 +1,46 @@
+{
+    "usuario":{
+        "nome":"Sombra",
+        "usuario":"sombra",
+        "senha":"123456",
+        "chave":"null"
+    },
+    "conversas":[
+        {
+            "usuario":"joao", 
+            "chave":"full", 
+            "mensagens":[
+                {
+                    "por":"joão",
+                    "mensagem":"oi seu capivara",
+                    "data": "20/08/2025 8:13:30",
+                    "status": "visualisada"
+                },
+                {
+                    "por":"gabriell",
+                    "mensagem":"capivara é tu",
+                    "data": "20/08/2025 8:17:30",
+                    "status": "visualisada"
+                }
+            ]
+        },
+        {
+            "usuario":"felipe", 
+            "chave":"3x", 
+            "mensagens":[
+                {
+                    "por":"felipe",
+                    "mensagem":"fala men",
+                    "data": "20/08/2025 8:20:30",
+                    "status": "visualisada"
+                },
+                {
+                    "por":"gabriell",
+                    "mensagem":"é digita porra",
+                    "data": "20/08/2025 8:21:30",
+                    "status": "visualisada"
+                }
+            ]
+        }
+    ]
+}
