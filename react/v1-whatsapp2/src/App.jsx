@@ -7,6 +7,7 @@ function App() {
   const [client , setClient ] = useState(null);
   const [ mensagens, setMensagens ] = useState([]);
   const [ topic, setTopic ] = useState("")
+  const [ mensage, setMensagem ] = useState("")
   useEffect(() => {
     const options = {
       connectTimeout: 4000,
@@ -31,10 +32,10 @@ function App() {
     mqttClient.on("message", (topic, payload) => {
         console.log(`Mensagem recebida do tópico ${topic}: ${payload.toString()}`);
     });
-
-    return ()=>{
-      //
-    }
+    return () => {
+      // NÃO encerra a conexão aqui
+      // Isso evita que a reconexão cause múltiplos clients
+    };
   }, []);
 
 
@@ -50,12 +51,22 @@ function App() {
     )
   }
 
+  const Publicar = ()=>{
+    console.log("a");
+    
+    if(!client)return;
+      client.publish(`${topic}`, mensage);
+  }
+
 useEffect(() => {
   if (!client) return; // evita rodar sem client
   client.on("message", (top, message) => {
     setMensagens(prev => [...prev, message.toString()]);
   });
 }, [client]);
+useEffect(()=>{console.log(mensagens);
+},[mensagens])
+
 
   return(
     <div className="">
@@ -64,21 +75,32 @@ useEffect(() => {
             Increver-se em um Topico
           </label>
           <input type="text" value={topic} onChange={(e)=>setTopic(e.target.value)}/>
-          <input type="button" value="Increver-se" onClick={novoTopico}/>
+          <input type="button" value="Increver-se" onClick={()=>novoTopico()}/>
       </div>
-      { 
-        mensagens 
-        ?
-        mensagens.map((item, index)=>{
-          return(
-            <p key={index}>
-              {item}
-            </p>
-          )
-        })
-        :
-        ""
-      }
+      <div className="">
+          <label htmlFor="topico">
+            Publica Mensagem em um Topico
+          </label>
+          <input type="text" placeholder='mensagem' value={mensage} onChange={(e)=>setMensagem(e.target.value)}/>
+          <input type="text"  placeholder='topico' value={topic} onChange={(e)=>setTopic(e.target.value)}/>
+          <input type="button" value="Publicar" onClick={()=>Publicar()}/>
+      </div>
+      <div>
+        <h2>Mensagens recebidas</h2>
+          { 
+            mensagens 
+            ?
+            mensagens.map((item, index)=>{
+              return(
+                <p key={index}>
+                  {item}
+                </p>
+              )
+            })
+            :
+            ""
+          }
+      </div>
     </div>
   )
 
