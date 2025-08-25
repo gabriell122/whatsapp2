@@ -38,9 +38,6 @@ aedes.on('subscribe', (subscriptions, client) => {
   
 
 
-
-
-
 // Servidor HTTP + WebSockets para MQTT
 const httpServer = http.createServer();
 const wss = new ws.Server({ server: httpServer });
