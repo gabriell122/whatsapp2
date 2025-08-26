@@ -6,7 +6,8 @@ function App() {
 
   const [client , setClient ] = useState(null);
   const [ mensagens, setMensagens ] = useState([]);
-  const [ topic, setTopic ] = useState("")
+  const [subTopic, setSubTopic] = useState("");
+  const [pubTopic, setPubTopic] = useState("");
   const [ mensage, setMensagem ] = useState("")
   useEffect(() => {
     const options = {
@@ -40,9 +41,9 @@ function App() {
 
 
   const novoTopico = ()=>{
-    client.subscribe(topic,(err) => {
+    client.subscribe(subTopic,(err) => {
         if (!err) {
-          console.log("Inscrito em " + topic);
+          console.log("Inscrito em " + subTopic);
         }else{
           console.log(err);
           
@@ -55,17 +56,32 @@ function App() {
     console.log("a");
     
     if(!client)return;
-      client.publish(`${topic}`, mensage);
+      client.publish(`${pubTopic}`, mensage);
   }
 
 useEffect(() => {
-  if (!client) return; // evita rodar sem client
-  client.on("message", (top, message) => {
-    setMensagens(prev => [...prev, message.toString()]);
-  });
+  if (!client) return;
+
+  const handleMessage = (pubTopic, message) => {
+    setMensagens(prev => prev.includes(message.toString()) ? prev : [...prev, message.toString()]);
+  };
+  // const handleMessage = (pubTopic, message) => {
+  //   const msgStr = message.toString();
+  //   const novaMsg = { topico: pubTopic, mensage: msgStr };
+
+  //   setMensagens(prev =>
+  //     prev.some(m => m.topico === pubTopic && m.mensage === msgStr)
+  //       ? prev
+  //       : [...prev, novaMsg]
+  //   );
+  // };
+
+  client.on("message", handleMessage);
+
+  return () => {
+    client.off("message", handleMessage);
+  };
 }, [client]);
-useEffect(()=>{console.log(mensagens);
-},[mensagens])
 
 
   return(
@@ -74,7 +90,7 @@ useEffect(()=>{console.log(mensagens);
           <label htmlFor="topico">
             Increver-se em um Topico
           </label>
-          <input type="text" value={topic} onChange={(e)=>setTopic(e.target.value)}/>
+          <input type="text" value={subTopic} onChange={(e)=>setSubTopic(e.target.value)}/>
           <input type="button" value="Increver-se" onClick={()=>novoTopico()}/>
       </div>
       <div className="">
@@ -82,7 +98,7 @@ useEffect(()=>{console.log(mensagens);
             Publica Mensagem em um Topico
           </label>
           <input type="text" placeholder='mensagem' value={mensage} onChange={(e)=>setMensagem(e.target.value)}/>
-          <input type="text"  placeholder='topico' value={topic} onChange={(e)=>setTopic(e.target.value)}/>
+          <input type="text" value={pubTopic} onChange={(e)=>setPubTopic(e.target.value)}/>
           <input type="button" value="Publicar" onClick={()=>Publicar()}/>
       </div>
       <div>
@@ -211,3 +227,121 @@ useEffect(()=>{console.log(mensagens);
 }
 
 export default App
+
+// function App() {
+
+//   const [client , setClient ] = useState(null);
+//   const [ mensagens, setMensagens ] = useState([]);
+//   const [subTopic, setSubTopic] = useState("");
+//   const [pubTopic, setPubTopic] = useState("");
+//   const [ mensage, setMensagem ] = useState("")
+//   useEffect(() => {
+//     const options = {
+//       connectTimeout: 4000,
+//       reconnectPeriod: 1000,
+//     };
+//     // Conectar ao broker (precisa estar habilitado para WS)
+//     const mqttClient = mqtt.connect("ws://localhost:9001", options); // Porta WS (não a 1883 padrão TCP)
+//     setClient(mqttClient);
+
+//     mqttClient.on('connect', () => {
+//       console.log('MQTT conectado:', mqttClient.options.clientId);
+//     });
+
+//     mqttClient.on('error', (err) => {
+//       console.error('Erro MQTT:', err);
+//     });
+
+//     mqttClient.on('reconnect', () => {
+//       console.log('Tentando reconectar...');
+//     });
+
+//     mqttClient.on("message", (topic, payload) => {
+//         console.log(`Mensagem recebida do tópico ${topic}: ${payload.toString()}`);
+//     });
+//     return () => {
+//       // NÃO encerra a conexão aqui
+//       // Isso evita que a reconexão cause múltiplos clients
+//     };
+//   }, []);
+
+
+//   const novoTopico = ()=>{
+//     client.subscribe(subTopic,(err) => {
+//         if (!err) {
+//           console.log("Inscrito em " + subTopic);
+//         }else{
+//           console.log(err);
+          
+//         }
+//       } 
+//     )
+//   }
+
+//   const Publicar = ()=>{
+//     console.log("a");
+    
+//     if(!client)return;
+//       client.publish(`${pubTopic}`, mensage);
+//   }
+
+// useEffect(() => {
+//   if (!client) return;
+
+//   const handleMessage = (pubTopic, message) => {
+//     setMensagens(prev => prev.includes(message.toString()) ? prev : [...prev, { "topico": pubTopic,"mensage":  message.toString() }]);
+//   };
+
+//   client.on("message", handleMessage);
+
+//   return () => {
+//     client.off("message", handleMessage);
+//   };
+// }, [client]);
+
+
+//   return(
+//     <div className="">
+//       <div>
+//           <label htmlFor="topico">
+//             Increver-se em um Topico
+//           </label>
+//           <input type="text" value={subTopic} onChange={(e)=>setSubTopic(e.target.value)}/>
+//           <input type="button" value="Increver-se" onClick={()=>novoTopico()}/>
+//       </div>
+//       <div className="">
+//           <label htmlFor="topico">
+//             Publica Mensagem em um Topico
+//           </label>
+//           <input type="text" placeholder='mensagem' value={mensage} onChange={(e)=>setMensagem(e.target.value)}/>
+//           <input type="text" value={pubTopic} onChange={(e)=>setPubTopic(e.target.value)}/>
+//           <input type="button" value="Publicar" onClick={()=>Publicar()}/>
+//       </div>
+//       <div>
+//         <h2>Mensagens recebidas</h2>
+//           { 
+//             mensagens 
+//             ?
+//             mensagens.map((item, index)=>{
+//               return(
+//                 <div key={index}>
+//                   <p>
+//                     topico:
+//                     {item.topico}
+//                   </p>
+//                   <p>
+//                     mensagem: 
+//                     {item.mensagem}
+//                   </p>
+//                 </div>
+//               )
+//             })
+//             :
+//             ""
+//           }
+//       </div>
+//     </div>
+//   )
+// }
+
+
