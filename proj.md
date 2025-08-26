@@ -40,25 +40,25 @@ O que não vai ter (fora do escopo, para não complicar agora):
 🔹 Etapas do Projeto
 1. Planejamento inicial
 
-    Definir pastas do projeto (frontend, backend/broker).
+    Definir pastas do projeto (frontend, backend/broker). -OK
 
-    Configurar Git (se quiser versionar).
+    Configurar Git (se quiser versionar). -OK
 
 2. Configuração do ambiente
 
-    Criar projeto React.
+    Criar projeto React. -OK
 
     Integrar com Electron (abrir React dentro de janela desktop).
 
-    Configurar broker MQTT (Node com Aedes).
+    Configurar broker MQTT (Node com Aedes). -OK
 
 3. Funcionalidade básica
 
-    Criar cliente MQTT no React.
+    Criar cliente MQTT no React. -OK
 
-    Conectar ao broker e enviar mensagem simples.
+    Conectar ao broker e enviar mensagem simples. -OK
 
-    Receber mensagem e mostrar na tela.
+    Receber mensagem e mostrar na tela. -OK
 
 4. Interface inicial
 

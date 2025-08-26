@@ -7,7 +7,28 @@ const net = require('net');
 const ws = require("ws");
 // CRIA O SERVIÇO HTTP
 const http = require("http");
-//CONEXÃO COM BANCO
+// CRIA A API
+const express = require('express');
+// ADICIONA OUTROS METODOS HTTP
+const cors = require('cors');
+// DEPEDENCIAS
+const router = require("./routers/router")
+
+//PORTAS DAS APLICACOES
+const PORTAAPI = 3333, PORTABROKER = 1883, PORTAWS = 9001;
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use(router);
+
+// Inicia a api
+app.listen(PORTAAPI, () => {
+  console.log('Servidor iniciado na porta ' + PORTAAPI); 
+});
+
+
+
 
 // Cria o servidor MQTT
 const server = net.createServer(aedes.handle);
@@ -61,11 +82,11 @@ wss.on("connection", (ws) => {
 
 
 // Inicia o BROKER MQTT
-server.listen(1883, () => {
-  console.log(`Broker MQTT rodando na porta ${1883}`);
+server.listen(PORTABROKER, () => {
+  console.log(`Broker MQTT rodando na porta ${PORTABROKER}`);
 });
 
 // Inicia o SERVIÇO HTTP + WEBSOCKETS
-httpServer.listen(9001, () => {
-  console.log(`Broker MQTT WebSocket rodando na porta ${9001}`);
+httpServer.listen(PORTAWS, () => {
+  console.log(`Broker MQTT WebSocket rodando na porta ${PORTAWS}`);
 });
