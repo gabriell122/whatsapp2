@@ -63,7 +63,7 @@ useEffect(() => {
   if (!client) return;
 
   const handleMessage = (pubTopic, message) => {
-    setMensagens(prev => prev.includes(message.toString()) ? prev : [...prev, message.toString()]);
+    setMensagens(prev => [...prev, message.toString()]);
   };
   // const handleMessage = (pubTopic, message) => {
   //   const msgStr = message.toString();
