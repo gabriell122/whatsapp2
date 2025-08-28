@@ -40,7 +40,7 @@ router.post( "/conversas", async (req, res)=>{
         // GERA O CAMINHO DO ARQUIVO
         const dirPath = path.join(__dirname, "..", "conversas" , nome + ".json");
         
-        if (fs.existsSync(filePath)) 
+        if (fs.existsSync(dirPath)) 
             return res.status(409).json({
                 confirma:false,
                 data: "arquivo ja existente",
