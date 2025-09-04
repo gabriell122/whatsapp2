@@ -1,0 +1,21 @@
+{
+  "nome": "felipe",
+  "status": "online",
+  "mensagens": [
+    {
+      "de": "gabriell",
+      "texto": "salve",
+      "hora": "2025-08-27T20:07:57.181Z"
+    },
+    {
+      "de": "gabriell",
+      "texto": "fala",
+      "hora": "2025-09-04T01:07:53.870Z"
+    },
+    {
+      "de": "gabriell",
+      "texto": "funciona",
+      "hora": "2025-09-04T01:08:03.884Z"
+    }
+  ]
+}
