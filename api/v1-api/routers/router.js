@@ -40,22 +40,30 @@ router.post( "/conversas", async (req, res)=>{
         // GERA O CAMINHO DO ARQUIVO
         const dirPath = path.join(__dirname, "..", "conversas" , nome + ".json");
         
-        if (fs.existsSync(dirPath)) 
+        if (fs.existsSync(dirPath)){
             return res.status(409).json({
                 confirma:false,
                 data: "arquivo ja existente",
                 erro: "arquivo ja existente"
             })
+        }
+
+        // CONTEÚDO PADRÃO
+        const conteudoPadrao = {
+            nome: nome,       // usa o nome que veio no body
+            status: "online", // status inicial
+            mensagens: []     // array vazio
+        };
 
         // CRIA  O ARQUIVO
-        fs.writeFile(dirPath, "" , (err) => {
+        fs.writeFile(dirPath, JSON.stringify(conteudoPadrao, null, 2), (err) => {
             if (err) {
                 console.error("Erro ao criar arquivo:", err);
-                return res.status(200).json({
-                    confirma:false,
-                    data:"erro ao criar arquivo",
+                return res.status(500).json({
+                    confirma: false,
+                    data: "erro ao criar arquivo",
                     erro: err
-                })
+                });
             } else {
                 console.log("Arquivo criado com sucesso!");
             }
@@ -63,6 +71,27 @@ router.post( "/conversas", async (req, res)=>{
         return res.status(201).json({
             confirma:true,
             data: "create",
+            erro: null
+        })
+    } catch (error) {
+        return res.status(400).json({
+            confirma:false,
+            erro: error
+        })
+    }
+})
+
+router.get("/mensagens/:nome", async ( req, res)=>{
+    try {
+        const {nome} = req.params;
+        const filePath = path.join(__dirname,"../", "conversas/" ,nome + ".json");
+        // 1. Lê o conteúdo do arquivo
+        let data = fs.readFileSync(filePath, "utf8");
+        // 2. Converte para objeto JS
+        let json = JSON.parse(data);
+        return res.status(200).json({
+            confirma:true,
+            data: json.mensagens,
             erro: null
         })
     } catch (error) {
