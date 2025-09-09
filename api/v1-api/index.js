@@ -14,8 +14,23 @@ const cors = require('cors');
 // DEPEDENCIAS
 const router = require("./routers/router")
 
+const fs = require("fs");
+const path = require("path");
+
 //PORTAS DAS APLICACOES
 const PORTAAPI = 3333, PORTABROKER = 1883, PORTAWS = 9001;
+
+const ExistFile = ({ fileName })=>{
+    const filePath = path.join(__dirname, fileName);
+    if (fs.existsSync(filePath)) {
+        console.log("✅ O arquivo existe!");
+        return true
+    } else {
+        CreateFile(fileName)
+        return false
+    }
+}
+
 
 const app = express();
 app.use(cors());
@@ -47,7 +62,45 @@ aedes.on('clientDisconnect', (client) => {
 });
 
 aedes.on('publish', async (packet, client) => {
-    console.log(`Mensagem publicada: ${packet.topic} | Conteúdo: ${packet.payload.toString()} | Cliente: ${client ? client.id : 'Desconhecido'}`);
+  console.log(`Mensagem publicada: ${packet.topic} | Conteúdo: ${packet.payload.toString()} | Cliente: ${client ? client.id : 'Desconhecido'}`);
+  const [ para, por] = packet.topic.split('/');
+  if(client){
+    const fileName = path.join(__dirname, "conversas" , por + ".json");
+    if(!ExistFile({fileName})){
+        // CONTEÚDO PADRÃO
+        const conteudoPadrao = {
+            nome: por,       // usa o nome que veio no body
+            status: "online", // status inicial
+            mensagens: []     // array vazio
+        };
+
+        // CRIA  O ARQUIVO
+        fs.writeFile(dirPath, JSON.stringify(conteudoPadrao, null, 2), (err) => {
+            if (err) {
+                console.error("Erro ao criar arquivo:", err);
+            } else {
+                console.log("Arquivo criado com sucesso!");
+            }
+        }); 
+    }
+    // 1. Lê o conteúdo do arquivo
+    let data = fs.readFileSync(fileName, "utf8");
+    // 2. Converte para objeto JS
+    let json = JSON.parse(data);
+    // 3. Adiciona um item no array de mensagens
+    json.mensagens.push({
+      de: por,
+      texto: packet.payload.toString(),
+      hora: new Date().toISOString()
+    });
+
+    // 4. Converte de volta para JSON string formatado
+    let novoConteudo = JSON.stringify(json, null, 2);
+
+    // 5. Salva no arquivo novamente
+    fs.writeFileSync(filePath, novoConteudo, "utf8");
+
+  }
 });
 
 
