@@ -26,7 +26,6 @@ const ExistFile = ({ fileName })=>{
         console.log("✅ O arquivo existe!");
         return true
     } else {
-        CreateFile(fileName)
         return false
     }
 }
@@ -62,47 +61,51 @@ aedes.on('clientDisconnect', (client) => {
 });
 
 aedes.on('publish', async (packet, client) => {
-  console.log(`Mensagem publicada: ${packet.topic} | Conteúdo: ${packet.payload.toString()} | Cliente: ${client ? client.id : 'Desconhecido'}`);
-  const [ para, por] = packet.topic.split('/');
-  if(client){
-    const fileName = path.join(__dirname, "conversas" , por + ".json");
-    if(!ExistFile({fileName})){
-        // CONTEÚDO PADRÃO
-        const conteudoPadrao = {
-            nome: por,       // usa o nome que veio no body
-            status: "online", // status inicial
-            mensagens: []     // array vazio
-        };
+  const [para, por] = packet.topic.split('/');
 
-        // CRIA  O ARQUIVO
-        fs.writeFile(dirPath, JSON.stringify(conteudoPadrao, null, 2), (err) => {
-            if (err) {
-                console.error("Erro ao criar arquivo:", err);
-            } else {
-                console.log("Arquivo criado com sucesso!");
-            }
-        }); 
+  if (client) {
+    const fileName = path.join(__dirname, "conversas", por + ".json");
+
+    // verifica se o arquivo existe
+    if (!fs.existsSync(fileName)) {
+      // CONTEÚDO PADRÃO
+      const conteudoPadrao = {
+        nome: por,        // usa o nome do tópico
+        status: "online", // status inicial
+        mensagens: []     // array vazio
+      };
+
+      // cria o arquivo com conteúdo padrão
+      fs.writeFileSync(fileName, JSON.stringify(conteudoPadrao, null, 2), "utf8");
+      console.log("Arquivo criado com sucesso!");
     }
+    console.log(fileName);
+    
     // 1. Lê o conteúdo do arquivo
     let data = fs.readFileSync(fileName, "utf8");
+
     // 2. Converte para objeto JS
     let json = JSON.parse(data);
-    // 3. Adiciona um item no array de mensagens
+
+    // 3. Adiciona uma nova mensagem
     json.mensagens.push({
       de: por,
       texto: packet.payload.toString(),
       hora: new Date().toISOString()
     });
-
-    // 4. Converte de volta para JSON string formatado
+    console.log({
+      de: por,
+      texto: packet.payload.toString(),
+      hora: new Date().toISOString()
+    });
+    
+    // 4. Converte de volta para JSON formatado
     let novoConteudo = JSON.stringify(json, null, 2);
 
     // 5. Salva no arquivo novamente
-    fs.writeFileSync(filePath, novoConteudo, "utf8");
-
+    fs.writeFileSync(fileName, novoConteudo, "utf8");
   }
 });
-
 
   
 // Evento de inscrição em tópicos
