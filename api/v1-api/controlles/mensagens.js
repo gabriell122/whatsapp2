@@ -9,10 +9,10 @@ module.exports = {
         try {
             
             //PEGA AS INFORMAÇÕES DO BODY
-            const { conversa, mensagem} = req.body;
+            const { conversas, mensagens} = req.body;
             
             //PEGA O CAMINO DO ARQUIVO
-            const filePath = path.join( __dirname, "../", "conversas", conversa+".json");
+            const filePath = path.join( __dirname, "../", "conversas", conversas + ".json");
 
             //LE O ARQUIVO DA CONVERSA
             let data = await fs.readFile(filePath, "utf8");
@@ -21,9 +21,9 @@ module.exports = {
             let json = JSON.parse(data);
 
             //ADICIONA A NOVA MENSAGEM
-            json.mensagem.push({
+            json.mensagens.push({
                 de:"gabriell",
-                texto: mensagem,
+                texto: mensagens,
                 hora: new Date().toISOString()
             })
 
@@ -40,6 +40,8 @@ module.exports = {
                 erro: null
             })
         } catch (error) {
+            console.log(error);
+            
             return res.status(400).json({
                 confirma:false,
                 erro: error
