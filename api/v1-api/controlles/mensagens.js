@@ -1,5 +1,4 @@
 const fs = require("fs").promises;
-const { error } = require("console");
 const path = require("path");
 
 module.exports = {
@@ -40,8 +39,6 @@ module.exports = {
                 erro: null
             })
         } catch (error) {
-            console.log(error);
-            
             return res.status(400).json({
                 confirma:false,
                 erro: error
@@ -49,14 +46,14 @@ module.exports = {
         }
     },
     async MensagensGet ( req, res){
-        try {
+        try {   
             
             //PEGA AS INFORMAÇÕES DO PARAMS
-            const { conversa } = req.params;
+            const { conversas } = req.params;
             
             //PEGA O CAMINHO DO ARQUIVO
-            const filePath = path.join( __dirname, "../", "conversa", conversa + ".json");
-
+            const filePath = path.join( __dirname, "../", "conversas", conversas + ".json");
+            
             //LE O ARQUIVO
             const data = await fs.readFile( filePath, "utf8");
 

@@ -2,85 +2,16 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const mensagens = require("../controlles/mensagens");
+const conversas = require("../controlles/conversas");
 const router = express.Router()
 
 
 
 //LISTA AS CONVERSAS DO USUARIO 
-router.get( "/conversas", async (req, res)=>{
-
-    try {
-        //GERRA O CAMINHO DAS CONVERSAS
-        const dirPath = path.join(__dirname, "..", "conversas");
-
-        //RETORNA UMA LISTA DOS ARQUIVOS DENTRO DO DIRETORIO    
-        const arquivos = fs.readdirSync(dirPath);
-
-        //TIRA A EXTENCAO DO ARQUIVO
-        const nomes = arquivos.map(arq => path.parse(arq).name);
-
-        return res.status(200).json({
-            confirma:true,
-            data: nomes,
-            erro: null
-        })
-    } catch (error) {
-        return res.status(400).json({
-            confirma:false,
-            erro: error
-        })
-    }
-})
+router.get( "/conversas", conversas.ConversasGet);
 
 //ADICIONA UMA NOVA CONVERSA AO USUARIO
-router.post( "/conversas", async (req, res)=>{
-    try {
-        // NOME DA NOVA CONVERSA
-        const { nome } = req.body;
-
-        // GERA O CAMINHO DO ARQUIVO
-        const dirPath = path.join(__dirname, "..", "conversas" , nome + ".json");
-        
-        if (fs.existsSync(dirPath)){
-            return res.status(409).json({
-                confirma:false,
-                data: "arquivo ja existente",
-                erro: "arquivo ja existente"
-            })
-        }
-
-        // CONTEÚDO PADRÃO
-        const conteudoPadrao = {
-            nome: nome,       // usa o nome que veio no body
-            status: "online", // status inicial
-            mensagens: []     // array vazio
-        };
-
-        // CRIA  O ARQUIVO
-        fs.writeFile(dirPath, JSON.stringify(conteudoPadrao, null, 2), (err) => {
-            if (err) {
-                console.error("Erro ao criar arquivo:", err);
-                return res.status(500).json({
-                    confirma: false,
-                    data: "erro ao criar arquivo",
-                    erro: err
-                });
-            } else {
-                console.log("Arquivo criado com sucesso!");
-            }
-        });
-        return res.status(201).json({
-            confirma:true,
-            data: "create",
-            erro: null
-        })
-    } catch (error) {
-        return res.status(400).json({
-            confirma:false,
-            erro: error
-        })
-    }
-})
+router.post( "/conversas", conversas.ConverassPost)
 
 
 router.post("/mensagens", mensagens.MensagensPost)
