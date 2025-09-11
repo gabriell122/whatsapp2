@@ -64,45 +64,51 @@ aedes.on('publish', async (packet, client) => {
   const [para, por] = packet.topic.split('/');
   if (client) {
     const fileName = path.join(__dirname, "conversas", por + ".json");
-
     // verifica se o arquivo existe
     if (!fs.existsSync(fileName)) {
       // CONTEÚDO PADRÃO
       const conteudoPadrao = {
         nome: por,        // usa o nome do tópico
         status: "online", // status inicial
-        mensagens: []     // array vazio
+        mensagens: [
+          {
+            de: por,
+            texto: packet.payload.toString(),
+            hora: new Date().toISOString()
+          }
+        ]     // array com a primeira mensagem
       };
 
       // cria o arquivo com conteúdo padrão
-      fs.writeFileSync(fileName, JSON.stringify(conteudoPadrao, null, 2), "utf8");
+      await fs.promises.writeFile(fileName, JSON.stringify(conteudoPadrao, null, 2), "utf8");
       console.log("Arquivo criado com sucesso!");
+    }else{
+      console.log({
+        de: por,
+        texto: packet.payload.toString(),
+        hora: new Date().toISOString()
+      });
+      // 1. Lê o conteúdo do arquivo
+      let data = await fs.promises.readFile(fileName, "utf8");
+      // 2. Converte para objeto JS
+      console.log("a");
+
+      let json = JSON.parse(data);
+      // 3. Adiciona uma nova mensagem
+      json.mensagens.push({
+        de: por,
+        texto: packet.payload.toString(),
+        hora: new Date().toISOString()
+      });
+      console.log("b");
+            
+      // 4. Converte de volta para JSON formatado
+      let novoConteudo = JSON.stringify(json, null, 2);
+
+      // 5. Salva no arquivo novamente
+      await fs.promises.writeFile(fileName, novoConteudo, "utf8");
+
     }
-    console.log(fileName);
-    
-    // 1. Lê o conteúdo do arquivo
-    let data = fs.readFileSync(fileName, "utf8");
-
-    // 2. Converte para objeto JS
-    let json = JSON.parse(data);
-
-    // 3. Adiciona uma nova mensagem
-    json.mensagens.push({
-      de: por,
-      texto: packet.payload.toString(),
-      hora: new Date().toISOString()
-    });
-    console.log({
-      de: por,
-      texto: packet.payload.toString(),
-      hora: new Date().toISOString()
-    });
-    
-    // 4. Converte de volta para JSON formatado
-    let novoConteudo = JSON.stringify(json, null, 2);
-
-    // 5. Salva no arquivo novamente
-    fs.writeFileSync(fileName, novoConteudo, "utf8");
   }
 });
 
