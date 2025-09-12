@@ -16,19 +16,10 @@ const router = require("./routers/router")
 
 const fs = require("fs");
 const path = require("path");
+const { FileExists } = require('./utils/fileExists');
 
 //PORTAS DAS APLICACOES
 const PORTAAPI = 3333, PORTABROKER = 1883, PORTAWS = 9001;
-
-const ExistFile = ({ fileName })=>{
-    const filePath = path.join(__dirname, fileName);
-    if (fs.existsSync(filePath)) {
-        console.log("✅ O arquivo existe!");
-        return true
-    } else {
-        return false
-    }
-}
 
 
 const app = express();
@@ -65,7 +56,10 @@ aedes.on('publish', async (packet, client) => {
   if (client) {
     const fileName = path.join(__dirname, "conversas", por + ".json");
     // verifica se o arquivo existe
-    if (!fs.existsSync(fileName)) {
+    const res = FileExists({fileName: fileName});
+
+
+    if (!res) {
       // CONTEÚDO PADRÃO
       const conteudoPadrao = {
         nome: por,        // usa o nome do tópico
@@ -91,7 +85,6 @@ aedes.on('publish', async (packet, client) => {
       // 1. Lê o conteúdo do arquivo
       let data = await fs.promises.readFile(fileName, "utf8");
       // 2. Converte para objeto JS
-      console.log("a");
 
       let json = JSON.parse(data);
       // 3. Adiciona uma nova mensagem
