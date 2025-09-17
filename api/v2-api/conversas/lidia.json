@@ -1,0 +1,46 @@
+{
+  "nome": "lidia",
+  "status": "online",
+  "mensagens": [
+    {
+      "de": "lidia",
+      "texto": "a",
+      "hora": "2025-09-09T19:18:33.078Z"
+    },
+    {
+      "de": "lidia",
+      "texto": "a",
+      "hora": "2025-09-09T19:19:16.864Z"
+    },
+    {
+      "de": "lidia",
+      "texto": "a",
+      "hora": "2025-09-09T19:19:18.526Z"
+    },
+    {
+      "de": "lidia",
+      "texto": "a",
+      "hora": "2025-09-09T19:19:19.751Z"
+    },
+    {
+      "de": "lidia",
+      "texto": "a",
+      "hora": "2025-09-09T19:19:20.863Z"
+    },
+    {
+      "de": "lidia",
+      "texto": "funciona",
+      "hora": "2025-09-09T19:19:32.091Z"
+    },
+    {
+      "de": "lidia",
+      "texto": "funciona",
+      "hora": "2025-09-09T19:30:58.604Z"
+    },
+    {
+      "de": "lidia",
+      "texto": "funciona",
+      "hora": "2025-09-11T02:41:29.630Z"
+    }
+  ]
+}

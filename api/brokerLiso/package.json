@@ -1,0 +1,11 @@
+{
+    "scripts": {
+        "start": "node index.js"
+    },
+    "dependencies": {
+        "aedes": "^0.51.3",
+        "net": "^1.0.2",
+        "http": "^0.0.1-security",
+        "ws": "^8.18.1"    
+    }
+}
