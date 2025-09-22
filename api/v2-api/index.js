@@ -5,17 +5,18 @@ const express = require('express');
 const cors = require('cors');
 // MQTT-CLIENT
 const mqtt = require("mqtt");
-
 // DEPEDENCIAS
 const router = require("./routers/router")
 
 const fs = require("fs");
-const path = require("path");
-const { FileExists } = require('./utils/fileExists');
+const { FileExists, default: ExistsSync } = require('./utils/existSync');
+const path = require('path');
+const { default: ReadSync } = require('./utils/readSync');
+const { default: DefaultFile } = require('./utils/defaultFile');
 
 //PORTAS DAS APLICACOES
 const PORTAAPI = 3333;
-
+const USER = "gabriell"
 
 const app = express();
 app.use(cors());
@@ -37,7 +38,7 @@ client.on("connect", () => {
   console.log("Conectado ao broker MQTT");
 
   // Subscreve no tópico desejado
-  client.subscribe("teste", (err) => {
+  client.subscribe( USER +"/#", (err) => {
     if (!err) {
       console.log("Inscrito em teste");
     }
@@ -46,7 +47,26 @@ client.on("connect", () => {
 
 // Escuta as mensagens
 client.on("message", (topic, message) => {
-  console.log(`Mensagem recebida em ${topic}: ${message.toString()}`);
+  console.log(topic);
+  console.log(message.toString());
+  
+  const [ get, post] = topic.split('/');
+  const pathPost = path.join( __dirname, "conversas", post + ".json")
+  if (ExistsSync({path: pathPost})) {
+    const dataFile = ReadSync({ path: pathPost});
+    if (!dataFile) {
+      console.log("Erro ao Ler o arquivo");
+      return
+    }
+    
+  } else {
+    if (DefaultFile({path: pathPost, data: message.toString(), post: post})) {
+      
+    }else{
+      return
+    }
+  }
 
-  // aqui você pode salvar em banco, chamar API, etc.
+
+
 });
