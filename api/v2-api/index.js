@@ -13,6 +13,7 @@ const { FileExists, default: ExistsSync } = require('./utils/existSync');
 const path = require('path');
 const { default: ReadSync } = require('./utils/readSync');
 const { default: DefaultFile } = require('./utils/defaultFile');
+const { default: SaveSync } = require('./utils/saveSync');
 
 //PORTAS DAS APLICACOES
 const PORTAAPI = 3333;
@@ -45,28 +46,37 @@ client.on("connect", () => {
   });
 });
 
-// Escuta as mensagens
+//ESCUTA TODAS AS MENSAGENS DO USUARIO
 client.on("message", (topic, message) => {
-  console.log(topic);
-  console.log(message.toString());
-  
+  //USUARIO QUE RECEBE / QUE ENVIA
   const [ get, post] = topic.split('/');
+  //CAMINHO DO ARQUIVO
   const pathPost = path.join( __dirname, "conversas", post + ".json")
+  //VERIFICA SE O ARQUIVO EXISTE
   if (ExistsSync({path: pathPost})) {
+    //LE O ARQUIVO
     const dataFile = ReadSync({ path: pathPost});
     if (!dataFile) {
       console.log("Erro ao Ler o arquivo");
       return
     }
-    
-  } else {
-    if (DefaultFile({path: pathPost, data: message.toString(), post: post})) {
-      
+    //FALTA FAZER A GRAVURA DA MENSAGEM
+    const dataJson = JSON.parse(dataFile)
+    dataJson.mensagens.push({
+      de: por,
+      texto: packet.payload.toString(),
+      hora: new Date().toISOString()
+    });
+    if (SaveSync({data: JSON.stringify(dataJson, null, 2), path:pathPost})) {
+      console.log("mensagem salva com susceso");
     }else{
+      console.log("erro");
+    }
+
+  } else {
+    //SE O ARQUIVO NÃO EXISTIR CRIA ELE E ADCIONA A MENSAGEM
+    if (!DefaultFile({path: pathPost, data: message.toString(), post: post})) {
       return
     }
   }
-
-
-
 });
