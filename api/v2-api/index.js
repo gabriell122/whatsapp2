@@ -7,10 +7,9 @@ const cors = require('cors');
 const mqtt = require("mqtt");
 // DEPEDENCIAS
 const router = require("./routers/router")
-
-const fs = require("fs");
-const { FileExists, default: ExistsSync } = require('./utils/existSync');
 const path = require('path');
+
+const { default: ExistsSync } = require('./utils/existSync');
 const { default: ReadSync } = require('./utils/readSync');
 const { default: DefaultFile } = require('./utils/defaultFile');
 const { default: SaveSync } = require('./utils/saveSync');

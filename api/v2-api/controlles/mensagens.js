@@ -1,10 +1,12 @@
 const fs = require("fs").promises;
 const path = require("path");
+const { default: ReadSync } = require("../utils/readSync");
+const { default: SaveSync } = require("../utils/saveSync");
 
 module.exports = {
 
     //REGISTRA AS MENSAGENS ENVIADAS PELO USUARIO PARA OUTRAS PESSOAS
-    async MensagensPost (req, res){
+    MensagensPost (req, res){
         try {
             
             //PEGA AS INFORMAÇÕES DO BODY
@@ -14,23 +16,35 @@ module.exports = {
             const filePath = path.join( __dirname, "../", "conversas", conversas + ".json");
 
             //LE O ARQUIVO DA CONVERSA
-            let data = await fs.readFile(filePath, "utf8");
+            let data = ReadSync({path:filePath});
 
-            //TRANSFORMA EM OBJETO JS
-            let json = JSON.parse(data);
-
+            if (!data) {
+                return res.status(400).json({
+                    confirma:false,
+                    data: "erro ao ler arquivo",
+                    erro: error
+                });
+            }
+            
             //ADICIONA A NOVA MENSAGEM
-            json.mensagens.push({
+            data.mensagens.push({
                 de:"gabriell",
                 texto: mensagens,
                 hora: new Date().toISOString()
             })
 
             //TRANSFORMA EM JSON STRING
-            data = JSON.stringify( json, null, 2);
+            data = JSON.stringify( data, null, 2);
 
             //GRAVA AS AUTERAÇÕES
-            await fs.writeFile( filePath, data, "utf8");
+            if(!SaveSync({data: JSON.stringify(json, null, 2), path:filePath})
+            ){
+                return res.status(400).json({
+                    confirma:false,
+                    data: "erro ao salvar arquivo",
+                    erro: error
+                });
+            }
 
             //RETORNA SUSCESO
             return res.status(201).json({
@@ -45,7 +59,7 @@ module.exports = {
             })
         }
     },
-    async MensagensGet ( req, res){
+    MensagensGet ( req, res){
         try {   
             
             //PEGA AS INFORMAÇÕES DO PARAMS
@@ -55,15 +69,19 @@ module.exports = {
             const filePath = path.join( __dirname, "../", "conversas", conversas + ".json");
             
             //LE O ARQUIVO
-            const data = await fs.readFile( filePath, "utf8");
-
-            //TRANSFORMA O ARQUIVO PARA OBJETO JS
-            const json = JSON.parse(data)
+            const data = ReadSync({path:filePath})
+            if (!data) {
+                return res.status(400).json({
+                    confirma:false,
+                    data: "erro ao ler arquivo",
+                    erro: error
+                });
+            }
 
             //RETORNA AS MENSAGENS DA CONVERSA
             return res.status(200).json({
                 confirma:true,
-                data: json.mensagens,
+                data: data.mensagens,
                 erro: null
             })
         } catch (error) {
