@@ -3,10 +3,10 @@ import './App.css'
 import { useState, useEffect } from 'react'
 import  Tudo from "./components/index"
 import mqtt from "mqtt";
+import Home from './pages/home';
 function App() {
   return(
-
-    <Tudo/>
+    <Home/>
   )
 }
 export default App

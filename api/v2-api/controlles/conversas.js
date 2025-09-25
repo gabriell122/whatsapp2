@@ -1,4 +1,4 @@
-const fs = require("fs").promises;
+const fs = require("fs");
 const path = require("path");
 const { default: ExistsSync } = require("../utils/existSync");
 const { default: DefaultFile } = require("../utils/defaultFile");
@@ -8,20 +8,17 @@ module.exports = {
         try {
             // CAMINHO DA PASTA DAS CONVERSAS
             const dirPath = path.join(__dirname, "..", "conversas");
-            console.log(dirPath);
-            
 
             // LISTA ARQUIVOS DA PASTA
             const arquivos = fs.readdirSync(dirPath);
-            console.log(arquivos);
             
             // REMOVE A EXTENSÃO DE CADA ARQUIVO
-            const nomes = arquivos.map(arq => path.parse(arq).name);
+            const filesName = arquivos.map(arq => path.parse(arq).name);
 
             // RETORNO DA API
             return res.status(200).json({
                 confirma: true,
-                data: nomes,
+                data: filesName,
                 erro: null
             });
         } catch (error) {
@@ -35,11 +32,17 @@ module.exports = {
         try {
             // NOME DA NOVA CONVERSA
             const { conversas } = req.body;
-            console.log(conversas);
+
+            if(!conversas){
+                //CAMPO NULO
+                return response.status(400).json({
+                    confirma: false,
+                    message: "campo nulo",
+                })
+            }
             
             // GERA O CAMINHO DO ARQUIVO
             const filePath = path.join(__dirname, "..", "conversas" , conversas + ".json");
-            console.log(filePath);
             
             if (ExistsSync({path:filePath})){
                 return res.status(409).json({
@@ -48,8 +51,10 @@ module.exports = {
                     erro: "arquivo ja existente"
                 })
             }
-    
+            
+            //CRIA CONVERSA VAZIA
             DefaultFile({path:filePath, post:conversas})
+
             return res.status(201).json({
                 confirma:true,
                 data: "create",
