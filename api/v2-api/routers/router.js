@@ -11,7 +11,7 @@ const router = express.Router()
 router.get( "/conversas", conversas.ConversasGet);
 
 //ADICIONA UMA NOVA CONVERSA AO USUARIO
-router.post( "/conversas", conversas.ConverassPost)
+router.post( "/conversas", conversas.ConverasPost)
 
 
 router.post("/mensagens", mensagens.MensagensPost)

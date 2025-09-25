@@ -1,23 +1,34 @@
 const fs = require("fs").promises;
 const path = require("path");
+const { default: ExistsSync } = require("../utils/existSync");
+const { default: DefaultFile } = require("../utils/defaultFile");
 
 module.exports = {
     async ConversasGet (req, res) {
         try {
-            //GERRA O CAMINHO DAS CONVERSAS
+            // CAMINHO DA PASTA DAS CONVERSAS
             const dirPath = path.join(__dirname, "..", "conversas");
-    
-            //RETORNA UMA LISTA DOS ARQUIVOS DENTRO DO DIRETORIO    
+            console.log("a");
+
+            // VERIFICA SE A PASTA EXISTE
+            if (!fs.existsSync(dirPath)) {
+                throw new Error("Diretório não encontrado: " + dirPath);
+            }
+
+            // LISTA ARQUIVOS DA PASTA
             const arquivos = fs.readdirSync(dirPath);
-    
-            //TIRA A EXTENCAO DO ARQUIVO
+            console.log("b");
+
+            // REMOVE A EXTENSÃO DE CADA ARQUIVO
             const nomes = arquivos.map(arq => path.parse(arq).name);
-    
+            console.log("c");
+
+            // RETORNO DA API
             return res.status(200).json({
-                confirma:true,
+                confirma: true,
                 data: nomes,
                 erro: null
-            })
+            });
         } catch (error) {
             return res.status(400).json({
                 confirma:false,
@@ -25,15 +36,17 @@ module.exports = {
             })
         }
     },
-    async ConverassPost (req, res) {
+    async ConverasPost (req, res) {
         try {
             // NOME DA NOVA CONVERSA
             const { conversas } = req.body;
-    
-            // GERA O CAMINHO DO ARQUIVO
-            const dirPath = path.join(__dirname, "..", "conversas" , conversas + ".json");
+            console.log(conversas);
             
-            if (fs.existsSync(dirPath)){
+            // GERA O CAMINHO DO ARQUIVO
+            const filePath = path.join(__dirname, "..", "conversas" , conversas + ".json");
+            console.log(filePath);
+            
+            if (ExistsSync({path:filePath})){
                 return res.status(409).json({
                     confirma:false,
                     data: "arquivo ja existente",
@@ -41,26 +54,7 @@ module.exports = {
                 })
             }
     
-            // CONTEÚDO PADRÃO
-            const conteudoPadrao = {
-                nome: conversas,       // usa o nome que veio no body
-                status: "online", // status inicial
-                mensagens: []     // array vazio
-            };
-    
-            // CRIA  O ARQUIVO
-            fs.writeFile(dirPath, JSON.stringify(conteudoPadrao, null, 2), (err) => {
-                if (err) {
-                    console.error("Erro ao criar arquivo:", err);
-                    return res.status(500).json({
-                        confirma: false,
-                        data: "erro ao criar arquivo",
-                        erro: err
-                    });
-                } else {
-                    console.log("Arquivo criado com sucesso!");
-                }
-            });
+            DefaultFile({path:filePath, post:conversas})
             return res.status(201).json({
                 confirma:true,
                 data: "create",
