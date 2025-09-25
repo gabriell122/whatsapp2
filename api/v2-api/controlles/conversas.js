@@ -8,20 +8,15 @@ module.exports = {
         try {
             // CAMINHO DA PASTA DAS CONVERSAS
             const dirPath = path.join(__dirname, "..", "conversas");
-            console.log("a");
-
-            // VERIFICA SE A PASTA EXISTE
-            if (!fs.existsSync(dirPath)) {
-                throw new Error("Diretório não encontrado: " + dirPath);
-            }
+            console.log(dirPath);
+            
 
             // LISTA ARQUIVOS DA PASTA
             const arquivos = fs.readdirSync(dirPath);
-            console.log("b");
-
+            console.log(arquivos);
+            
             // REMOVE A EXTENSÃO DE CADA ARQUIVO
             const nomes = arquivos.map(arq => path.parse(arq).name);
-            console.log("c");
 
             // RETORNO DA API
             return res.status(200).json({
