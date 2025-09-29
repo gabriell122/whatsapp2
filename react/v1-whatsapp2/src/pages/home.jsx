@@ -3,6 +3,7 @@ import ConnApi from "../services/axios";
 import GetMensagens from "../api/getMensagens";
 import PostMensagens from "../api/postMensagens";
 import GetConversas from "../api/getConversas";
+import { useMQTT } from "../mqtt/mqtt";
 
 const Home = ()=>{
     const [conversas, setConversas ] = useState();
@@ -10,6 +11,25 @@ const Home = ()=>{
     const [ selected, setSelected ] = useState("anadias");
     const [ mensagem, setMensagem ] = useState("")
     const [ reload, setReload ] = useState(true)
+    const { client, isConnected } = useMQTT();
+
+
+    useEffect(()=>{
+        if(client && isConnected){
+            const topic = "gabriell/#"
+            client.subscribe(topic, (err) => {
+                if (err) 
+                    console.error('Erro ao se inscrever:', err);
+            });
+            client.on('message', (topic, mensagem)=>{
+                const [ get, post] = topic.split('/');
+                if( post === selected)
+                    setReload(!reload)                    
+            });
+
+        }
+    },[])
+
     // Buscar mensagens da conversa selecionada
     useEffect(() => {
         const fetchMensagens = async () => {
@@ -27,9 +47,6 @@ const Home = ()=>{
     }, [selected, reload]);
 
 
-    // useEffect(()=>{
-    //     console.log(conversa);
-    // },[conversa])
     // Buscar lista de conversas
     useEffect(() => {
         const fetchConversas = async () => {
@@ -47,6 +64,8 @@ const Home = ()=>{
         };
         fetchConversas();
     }, []);
+
+
     const EnviarMensagem = async ()=>{
         try {
             const res = await PostMensagens({post:selected, mensagem:mensagem})
@@ -61,6 +80,8 @@ const Home = ()=>{
             console.log(err);
         }
     }
+
+
     return(
         <div className="c12 h1h green df ">
             <div className="c4 cm5 blue h1">
@@ -131,16 +152,3 @@ const Home = ()=>{
     )
 }
 export default Home
-/*
-
-            
-
-            
-
-                    
-
-                    
-                </div>
-            </div>  
-
-        */
