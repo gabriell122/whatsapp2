@@ -4,13 +4,23 @@ const DefaultFile = ({ post, data, path})=>{
         SaveSync({path: path, data:{
             nome: post,
             status: "online",
-            mensagens: [
+            ...(
+                data
+                ?
                 {
-                    de: post,
-                    texto: data,
-                    hora: new Date().toISOString()
+                    mensagens: [
+                        {
+                            de: post,
+                            texto: data,
+                            hora: new Date().toISOString()
+                        }
+                    ]
                 }
-            ]
+                :
+                {
+                    mensagens:[]
+                }
+            )
         }})
         return true
     } catch (error) {
