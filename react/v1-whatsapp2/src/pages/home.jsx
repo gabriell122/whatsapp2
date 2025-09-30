@@ -3,6 +3,7 @@ import ConnApi from "../services/axios";
 import GetMensagens from "../api/getMensagens";
 import PostMensagens from "../api/postMensagens";
 import GetConversas from "../api/getConversas";
+import PostConversas from "../api/postConversas"
 import { useMQTT } from "../mqtt/mqtt";
 
 const Home = ()=>{
@@ -12,8 +13,8 @@ const Home = ()=>{
     const [ mensagem, setMensagem ] = useState("")
     const [ reload, setReload ] = useState(true)
     const { client, isConnected } = useMQTT();
-
-
+    const [ novaConversa, setNovaConversa] = useState("")
+    const [ reload2, setReload2 ] = useState(true)
     useEffect(()=>{
         if(client && isConnected){
             const topic = "gabriell/#"
@@ -63,24 +64,43 @@ const Home = ()=>{
             }
         };
         fetchConversas();
-    }, []);
+    }, [reload2]);
 
 
     const EnviarMensagem = async ()=>{
         try {
-            const res = await PostMensagens({post:selected, mensagem:mensagem})
-            if (res.success){
-                setReload(!reload)
-                setMensagem("")
-            }
-            else
-                console.log(res);
+            if(mensagem){
+                const res = await PostMensagens({post:selected, mensagem:mensagem})
+                if (res.success){
+                    setReload(!reload)
+                    setMensagem("")
+                }
+                else
+                    console.log(res);
+            }else
+                console.log("campo vazio");
                 
         } catch (err) {
             console.log(err);
         }
     }
-
+    const NovaConversa = async ()=>{
+        try {
+            if(novaConversa){
+                const res = await PostConversas({post: novaConversa})
+                if (res.success){
+                    setNovaConversa("")
+                    setSelected(novaConversa)
+                    setReload2(!reload2)
+                }   
+                else
+                    console.log(res);
+            }else
+                console.log("campo vazio");
+        } catch (error) {
+            console.log(err);
+        }
+    }
 
     return(
         <div className="c12 h1h green df ">
@@ -101,7 +121,14 @@ const Home = ()=>{
                         <p className="sidebar-empty">Nenhuma conversa</p>
                         )}
                     </div>
+                    
 
+                    <div class="novo-chat bsbb">
+                        <div class="adicionar-conversa tac" onClick={()=>NovaConversa()}>
+                            + Adicionar Conversa
+                        </div>
+                        <input type="text" placeholder="Adicionar conversa..." class="input-conversa" value={novaConversa} onChange={(e)=>{setNovaConversa(e.target.value)}}/>
+                    </div>
                     <div className="sidebar-footer">
                         WhatsApp2 • MQTT
                     </div>

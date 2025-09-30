@@ -1,5 +1,11 @@
 {
   "nome": "midiel",
   "status": "online",
-  "mensagens": []
+  "mensagens": [
+    {
+      "de": "gabriell",
+      "texto": "dasdasdas",
+      "hora": "2025-09-30T00:38:34.657Z"
+    }
+  ]
 }

@@ -636,3 +636,41 @@ body {
   background-color: rgba(0, 0, 0, 0.25);
   border-radius: 3px;
 }
+
+
+.adicionar-conversa {
+  padding: 10px 16px;
+  color: #25d366; /* verde WhatsApp */
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.adicionar-conversa:hover {
+  background: #f0f2f5; /* cinza claro igual do WhatsApp Web */
+}
+.novo-chat {
+  box-sizing: border-box;
+  padding: 8px 12px;
+  background: #f0f2f5; /* cinza do WhatsApp */
+  border-bottom: 1px solid #ddd;
+}
+
+.input-conversa {
+  width: 100%;
+  padding: 10px 14px;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  outline: none;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  transition: box-shadow 0.2s ease;
+}
+
+.input-conversa:focus {
+  box-shadow: 0 0 0 2px #25d36655; /* verde WhatsApp suave */
+}
