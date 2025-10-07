@@ -6,7 +6,8 @@ const conversas = require("../controlles/conversas");
 const { default: ReadSync } = require("../utils/readSync");
 const { default: SaveSync } = require("../utils/saveSync");
 const { default: ExistsSync } = require("../utils/existSync");
-const { GerarHash } = require("../utils/bcrypt");
+const { GerarHash, VerificarSenha } = require("../utils/bcrypt");
+const { GerarToken } = require("../utils/jwt");
 const router = express.Router()
 
 
@@ -25,11 +26,7 @@ router.post("/login", (req, res) =>{
     try {
         const { user, password } = req.body;
         const filePath = path.join( __dirname ,"../configs/user.json")
-        
         const fileData = ReadSync({path:filePath})
-        const resp = VerificarSenha({password: password, hash:fileData.password})
-        console.log(resp);
-        
         if(!fileData){
             //ERRO AO LER ARQUIVO
             return res.status(400).json({
@@ -38,13 +35,26 @@ router.post("/login", (req, res) =>{
                 erro: error
             });
         }else{
+            const resp = VerificarSenha({password: password, hash:fileData.password})
+            if(resp){
+                const token = GerarToken({ user: { nome: user } });
+                
+                //RETORNA AS MENSAGENS DA CONVERSA
+                return res.status(200).json({
+                    confirma:true,
+                    data: {
+                        user:user,
+                        token:token
+                    },
+                    erro: null
+                })
+            }else{
+                return res.status(400).json({
+                    data: "Senha Incoreta",
+                    confirma:false,
+                })
+            }
             
-            //RETORNA AS MENSAGENS DA CONVERSA
-            return res.status(200).json({
-                confirma:true,
-                data: fileData,
-                erro: null
-            })
         }
             
     } catch (error) {
@@ -58,7 +68,6 @@ router.post("/login", (req, res) =>{
 router.post("/reset", (req, res)=>{
     try {
         const { user, password } = req.body;
-
         //VERIFICA SE OS DADOS EXISTE
         if (!(user && password)) {
             return response.status(400).json({
