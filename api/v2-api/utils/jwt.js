@@ -10,7 +10,6 @@ function VerificarToken({ token }) {
     return false;
   }
 }
-
 // GERA O TOKEN JWT
 function GerarToken({ user }) {
   return jwt.sign(user, key, { expiresIn: "1h" });
